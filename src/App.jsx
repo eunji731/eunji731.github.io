@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import heroImg from './assets/img/profile-hero.jpg'
 import outroImg from './assets/img/profile-outro.jpg'
 import './App.css'
@@ -10,11 +11,28 @@ const CONTACT = {
 
 const SKILLS = ['Java', 'Spring', 'MyBatis', 'JPA', 'PostgreSQL', 'Elasticsearch', 'Next.js', 'React']
 
+const CAREER_START = { year: 2023, month: 8 }
+
+function getCareerDuration() {
+  const now = new Date()
+  let months =
+    (now.getFullYear() - CAREER_START.year) * 12 + (now.getMonth() + 1 - CAREER_START.month)
+  if (now.getDate() < 1) months -= 1
+  months = Math.max(months, 0)
+
+  const years = Math.floor(months / 12)
+  const remainMonths = months % 12
+
+  if (years === 0) return `${remainMonths}개월`
+  if (remainMonths === 0) return `${years}년`
+  return `${years}년 ${remainMonths}개월`
+}
+
 const ABOUT_STATS = [
-  { label: '경력', value: '2년 11개월' },
+  { label: '경력', value: getCareerDuration() },
   { label: '분야', value: '백엔드 개발' },
   { label: '중심 경험', value: '공공・데이터 SI' },
-  { label: '기록 시작', value: '2023.08 ~' },
+  { label: '기록 시작', value: '2023.08 ~ 현재' },
 ]
 
 const WORK_STYLE = [
@@ -46,6 +64,7 @@ const TIMELINE = [
 const PROJECTS = [
   {
     tag: 'PROJECT 01',
+    featured: true,
     title: '서울형 빅데이터 표준분석모델 구축',
     subtitle: 'GIS 분석 데이터 처리 및 백엔드 연계 구조 구현',
     period: '2024.08 ~ 2025.01',
@@ -67,6 +86,7 @@ const PROJECTS = [
   },
   {
     tag: 'PROJECT 02',
+    featured: true,
     title: '스마트K팩토리 3차 고도화 구축',
     subtitle: '검색 아키텍처 고도화 및 사용자 중심 검색・표출 구조 개선',
     period: '2025.04 ~ 2025.10',
@@ -88,6 +108,7 @@ const PROJECTS = [
   },
   {
     tag: 'PROJECT 03 · 사내 개인 프로젝트',
+    featured: true,
     title: '사내 프로젝트관리시스템(PMS) 구축',
     subtitle: '담당 업무 영역의 화면・API・데이터 구조 설계 및 구현',
     period: '2026.02 ~ 2026.05',
@@ -108,6 +129,7 @@ const PROJECTS = [
   },
   {
     tag: 'PROJECT 04 · 개인 프로젝트',
+    featured: true,
     title: 'MUNGLOG (멍로그)',
     subtitle: '반려 생활 기록 기반 펫 라이프로그 서비스',
     period: '2026.05 ~ 2026.07',
@@ -127,6 +149,13 @@ const PROJECTS = [
       '사진 기반 AI 일기 생성으로 기록 작성 편의성 향상',
     ],
   },
+]
+
+const OTHER_PROJECTS = [
+  { period: '2023.09', title: 'BIDA', desc: '계층형 게시판 시스템 구축' },
+  { period: '2023.11', title: '2023 공공 빅데이터 표준분석모델 정립 및 확산', desc: '데이터 시각화' },
+  { period: '2024.02', title: '데이터 공유・활용 플랫폼 구축', desc: '데이터 업로드 및 다운로드 기능 개발' },
+  { period: '2025.10', title: '2025 공공 빅데이터 표준분석모델 정립 및 확산', desc: 'GIS 분석 데이터 이관・처리 및 시스템 백엔드 설계・구현' },
 ]
 
 const EDUCATION = [
@@ -318,29 +347,54 @@ function Career() {
   )
 }
 
-function ProjectCard({ project }) {
+function ProjectCard({ project, isOpen, onToggle }) {
+  const panelId = `project-panel-${project.title}`
+
   return (
-    <article className="project-card">
-      <p className="project-tag">{project.tag}</p>
-      <h3>
-        {project.title}
-        {project.link && (
-          <a className="project-link" href={project.link} target="_blank" rel="noreferrer">
-            바로가기 ↗
-          </a>
-        )}
-      </h3>
-      <p className="project-subtitle">{project.subtitle}</p>
-      <div className="project-meta">
-        <span className="project-period">{project.period}</span>
-        <ul className="project-stack">
-          {project.stack.map((s) => (
-            <li key={s}>{s}</li>
-          ))}
-        </ul>
-      </div>
-      <p className="project-summary">{project.summary}</p>
-      <div className="project-columns">
+    <article className={`project-card${project.featured ? ' is-featured' : ''}${isOpen ? ' is-open' : ''}`}>
+      <button
+        type="button"
+        className="project-card-trigger"
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        onClick={onToggle}
+      >
+        <div className="project-card-head">
+          <p className="project-tag">
+            {project.tag}
+            {project.featured && <span className="project-badge">이력서 수록 프로젝트</span>}
+          </p>
+          <h3>
+            {project.title}
+            {project.link && (
+              <a
+                className="project-link"
+                href={project.link}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
+              >
+                바로가기 ↗
+              </a>
+            )}
+          </h3>
+          <p className="project-subtitle">{project.subtitle}</p>
+          <div className="project-meta">
+            <span className="project-period">{project.period}</span>
+            <ul className="project-stack">
+              {project.stack.map((s) => (
+                <li key={s}>{s}</li>
+              ))}
+            </ul>
+          </div>
+          <p className="project-summary">{project.summary}</p>
+        </div>
+        <span className="project-toggle" aria-hidden="true">
+          {isOpen ? '접기 −' : '자세히 보기 +'}
+        </span>
+      </button>
+
+      <div id={panelId} className="project-columns" hidden={!isOpen}>
         <div>
           <h4>My Role</h4>
           <ul>
@@ -363,15 +417,34 @@ function ProjectCard({ project }) {
 }
 
 function Projects() {
+  const [openTitle, setOpenTitle] = useState(PROJECTS[0]?.title ?? null)
+
   return (
     <section id="projects" className="section">
       <p className="section-eyebrow">04 · Projects</p>
       <h2 className="section-title">주요 프로젝트</h2>
+      <p className="section-lead">카드를 클릭하면 담당 역할과 성과를 자세히 볼 수 있습니다.</p>
       <div className="project-list">
         {PROJECTS.map((p) => (
-          <ProjectCard project={p} key={p.title} />
+          <ProjectCard
+            project={p}
+            key={p.title}
+            isOpen={openTitle === p.title}
+            onToggle={() => setOpenTitle((prev) => (prev === p.title ? null : p.title))}
+          />
         ))}
       </div>
+
+      <h3 className="sub-heading other-projects-heading">그 외 참여 프로젝트</h3>
+      <ul className="other-project-list">
+        {OTHER_PROJECTS.map((p) => (
+          <li key={p.title}>
+            <span className="other-project-period">{p.period}</span>
+            <span className="other-project-title">{p.title}</span>
+            <span className="other-project-desc">{p.desc}</span>
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }
