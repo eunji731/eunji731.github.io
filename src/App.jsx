@@ -152,10 +152,26 @@ const PROJECTS = [
 ]
 
 const OTHER_PROJECTS = [
-  { period: '2023.09', title: 'BIDA', desc: '계층형 게시판 시스템 구축' },
-  { period: '2023.11', title: '2023 공공 빅데이터 표준분석모델 정립 및 확산', desc: '데이터 시각화' },
-  { period: '2024.02', title: '데이터 공유・활용 플랫폼 구축', desc: '데이터 업로드 및 다운로드 기능 개발' },
-  { period: '2025.10', title: '2025 공공 빅데이터 표준분석모델 정립 및 확산', desc: 'GIS 분석 데이터 이관・처리 및 시스템 백엔드 설계・구현' },
+  {
+    period: '2023.09 ~ 2023.11',
+    title: 'BIDA',
+    desc: '게시글・답글・댓글・대댓글 계층형 게시판 구조 설계 및 PostgreSQL 재귀 CTE 기반 계층 조회 로직 구현. 공통 게시판 모듈화로 재사용 가능한 구조 확보.',
+  },
+  {
+    period: '2023.11 ~ 2024.01',
+    title: '2023 공공 빅데이터 표준분석모델 정립 및 확산',
+    desc: '공공 데이터 분석 결과를 ECharts 기반 공통 시각화 모듈로 구현하고 대시보드 설계. 차트 로직 공통화로 재사용률 및 유지보수 효율성 향상.',
+  },
+  {
+    period: '2024.02 ~ 2024.04',
+    title: '데이터 공유・활용 플랫폼 구축',
+    desc: '계층형 파일 구조 설계와 데이터 업로드・다운로드・메타데이터 관리 백엔드 구현. 데이터 논리적 분류・탐색 효율성을 높이고 재사용 가능한 표준 모듈 확보.',
+  },
+  {
+    period: '2025.10 ~ 2026.01',
+    title: '2025 공공 빅데이터 표준분석모델 정립 및 확산',
+    desc: '기년도 데이터의 안전한 이관(pg_dump/restore) 및 GeoServer-DB 연동 구조 설계. 데이터 이관・정제 프로세스 정립으로 신규 분석 환경 신뢰도와 시각화 확장성 확보.',
+  },
 ]
 
 const EDUCATION = [
@@ -439,9 +455,11 @@ function Projects() {
       <ul className="other-project-list">
         {OTHER_PROJECTS.map((p) => (
           <li key={p.title}>
-            <span className="other-project-period">{p.period}</span>
-            <span className="other-project-title">{p.title}</span>
-            <span className="other-project-desc">{p.desc}</span>
+            <div className="other-project-head">
+              <span className="other-project-period">{p.period}</span>
+              <span className="other-project-title">{p.title}</span>
+            </div>
+            <p className="other-project-desc">{p.desc}</p>
           </li>
         ))}
       </ul>

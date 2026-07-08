@@ -620,19 +620,25 @@
 
 .other-project-list li {
   display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 6px 12px;
+  flex-direction: column;
+  gap: 6px;
   padding: 14px 20px;
   border-radius: 12px;
   border: 1px solid var(--border);
+}
+
+.other-project-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 12px;
 }
 
 .other-project-period {
   font-size: 12px;
   font-weight: 700;
   color: var(--text-h);
-  min-width: 60px;
+  min-width: 100px;
 }
 
 .other-project-title {
@@ -641,7 +647,9 @@
 }
 
 .other-project-desc {
+  margin: 0;
   font-size: 13px;
+  line-height: 1.6;
   color: var(--text);
 }
 
